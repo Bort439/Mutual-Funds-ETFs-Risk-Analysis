@@ -1,0 +1,130 @@
+import pandas as pd
+pd.set_option('display.float_format', lambda x: '%.2f' % x) #In this way print out the whoel number
+import datetime
+import numpy as np 
+import seaborn as sns
+import matplotlib.pyplot as plt
+import openpyxl
+%matplotlib inline
+from pandas_datareader import data as pdr
+import statsmodels.api as sm
+from statsmodels import regression
+
+##### Import Excel File already cleared, the original file is from kaggle (https://www.kaggle.com/code/nvukobrat/mutual-funds-and-etfs-analysis-python/input?select=Mutual+Funds.csv)
+MutualFunds = pd.read_excel(r'C:\Users\oborg\OneDrive\Documents\MutualFundsCleaned.xlsx')
+MutualFunds.sample(10)    
+MutualFunds.describe(include='object')
+
+MutualFunds.drop_duplicates(inplace=True)
+MutualFunds.info()
+##### Select only the most relevant funds
+Top_100_Funds=MutualFunds.total_net_assets.sort_values(ascending=False)[:100]
+print(Top_100_Funds)
+Greater_Funds=MutualFunds['total_net_assets']>=1.424288e+11
+print(Greater_Funds)
+MutualFunds=MutualFunds[Greater_Funds]
+MutualFunds.sample(10)
+MutualFunds.info()
+
+#####Risk Analysis for each Fund: I'm looking at these metrics to calculate mutual fund risk alpha, beta, r-squared, standard deviation, and the Sharpe ratio
+
+##### Calculate the beta
+
+#Importing category datas to calculate beta
+MutualFunds_category = pd.read_excel(r'C:\Users\oborg\OneDrive\Documents\MutualFundsCleaned.xlsx.xlsx')
+MutualFunds_category.sample(10)
+MutualFunds_beta = MutualFunds.merge(MutualFunds_category, on=['fund_symbol'])
+MutualFunds_beta.sample(10)
+MutualFunds_beta.info()
+MutualFunds.info()
+MutualFunds_beta.category_return_ytd.plot()
+MutualFunds_beta.year_to_date_return.plot()
+
+plt.title('FundsVsCategory returns')
+plt.legend()
+plt.show()
+
+X = MutualFunds_beta.category_return_ytd
+
+Y = MutualFunds_beta.year_to_date_return
+
+def linear_reg(x,y):
+    x = sm.add_constant(x)
+    model = regression.linear_model.OLS(y,x).fit()
+    return model.params[0], model.params[1]
+
+alpha, beta = linear_reg(X,Y)
+print('alpha: ' + str(alpha))
+print('beta: ' + str(beta))
+
+X2 = np.linspace(X.min(), X.max(), 100)
+Y_hat = X2 * beta + alpha
+plt.figure(figsize=(10,7))
+plt.scatter(X, Y) # Plot the raw data
+plt.xlabel("Category Return")
+plt.ylabel("Mutual Funds Return")
+
+plt.plot(X2, Y_hat)
+plt.show()
+MutualFunds_beta.year_to_date_return.plot()
+MutualFunds_beta.year_to_date_return[8:].plot()
+plt.legend()
+
+X = MutualFunds_beta.category_return_ytd[8:]
+
+Y = MutualFunds_beta.year_to_date_return[8:]
+
+def linear_reg(x,y):
+    x = sm.add_constant(x)
+    model = regression.linear_model.OLS(y,x).fit()
+    return model.params[0], model.params[1]
+
+alpha, beta = linear_reg(X,Y)
+print('alpha: ' + str(alpha))
+print('beta: ' + str(beta))
+
+median_5y= MutualFunds_beta.fund_return_5years.median()
+print(median_5y)
+median_10y= MutualFunds_beta.fund_return_10years.median()
+print(median_10y)
+MutualFunds_beta.fund_return_5years.fillna(value=median_5y, inplace = True)
+MutualFunds_beta.fund_return_10years.fillna(value=median_10y, inplace = True)
+MutualFunds_beta.fund_return_2020.fillna(value=0, inplace=True) 
+MutualFunds_beta.isnull().sum()
+MutualFunds_beta.category_return_2020.plot()
+MutualFunds_beta.fund_return_2020.plot()
+plt.legend()
+plt.show()
+
+A =  MutualFunds_beta.category_return_2020
+B =  MutualFunds_beta.fund_return_2020
+alpha, beta = linear_reg(A,B)
+print('alpha: ' + str(alpha))
+print('beta: ' + str(beta))
+
+
+MutualFunds_beta.category_return_5years.plot()
+MutualFunds_beta.fund_return_5years.plot()
+plt.legend()
+plt.show()
+
+C=MutualFunds_beta.category_return_5years
+D=MutualFunds_beta.fund_return_5years
+alpha, beta = linear_reg(C,D)
+print('alpha: ' + str(alpha))
+print('beta: ' + str(beta))
+
+MutualFunds_beta.category_return_10years.plot()
+MutualFunds_beta.fund_return_10years.plot()
+plt.legend()
+plt.show()
+
+E=MutualFunds_beta.category_return_10years
+
+F=MutualFunds_beta.fund_return_10years
+alpha, beta = linear_reg(E,F)
+print('alpha: ' + str(alpha))
+print('beta: ' + str(beta))
+##### Already from the beta we can see that mutual funds are more inefficient than the category in which they operate, but the aim of this project is not to find the most effixient 
+instrument to utilize (that are probably ETFs) but compare VCs and Mutual Funds
+
