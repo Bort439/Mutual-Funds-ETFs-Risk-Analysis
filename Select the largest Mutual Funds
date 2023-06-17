@@ -1,0 +1,11 @@
+##### Select only the most relevant funds
+Top_100_Funds=MutualFunds.total_net_assets.sort_values(ascending=False)[:100]
+print(Top_100_Funds)
+Greater_Funds=MutualFunds['total_net_assets']>=1.424288e+11
+print(Greater_Funds)
+MutualFunds=MutualFunds[Greater_Funds]
+MutualFunds.sample(10)
+MutualFunds.info()
+
+
+
