@@ -1,0 +1,20 @@
+# The Sharpe ratio is the average return earned in excess of the risk-free rate per unit of volatility 
+# I'll calculate the annualized Sharpe ratio because all data is annualized and I can compare different years to each other
+
+##### calculate the Sharpe Ratio for Mutual Funds
+ytd_daily_returns = MutualFunds_beta['fund_return_ytd']/252
+MutualFunds_beta['ytd_daily_returns']=ytd_daily_returns
+MutualFunds_beta['ytd_daily_returns']
+
+Sharpe_Ratio_ytd=MutualFunds_beta['ytd_daily_returns'].mean()/MutualFunds_beta['ytd_daily_returns'].std()
+print(Sharpe_Ratio_ytd)
+# 0.7909863227419578
+
+A_Sharpe_Ratio=Sharpe_Ratio_ytd*(252**0.5) 
+print(A_Sharpe_Ratio)
+
+
+##### calculate the Sharpe Ratio for each Category
+Sharpe_Ratio_category = MutualFunds_beta['category_daily_return'].mean()/MutualFunds_beta['category_daily_return'].std()
+print(Sharpe_Ratio_category)
+# 1.983909070771074
