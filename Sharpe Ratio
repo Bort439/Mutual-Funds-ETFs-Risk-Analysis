@@ -18,3 +18,28 @@ print(A_Sharpe_Ratio)
 Sharpe_Ratio_category = MutualFunds_beta['category_daily_return'].mean()/MutualFunds_beta['category_daily_return'].std()
 print(Sharpe_Ratio_category)
 # 1.983909070771074
+
+#### Categories splitting
+display(MutualFunds_beta.groupby('fund_category').count()['fund_symbol'])
+
+MF_Foreign_Large_Blend = MutualFunds_beta.loc[MutualFunds_beta['fund_category'] == 'Foreign Large Blend']
+MF_Foreign_Large_Blend
+
+ydt_daily_earnings=MF_Foreign_Large_Blend['fund_return_ytd']/252
+Sharpe_ytd=ydt_daily_earnings.mean()/ydt_daily_earnings.std()
+print(Sharpe_ytd)
+
+Foreign_Large_Growth= MutualFunds_beta.loc[MutualFunds_beta['fund_category'] == 'Foreign Large Growth']
+Foreign_Large_Growth
+
+ytd_daily_foreign = Foreign_Large_Growth['fund_return_ytd']/252
+Sharpe_foreign=ytd_daily_foreign.mean()/ytd_daily_foreign.std()
+print(Sharpe_foreign)
+Large_Blend=MutualFunds_beta.loc[MutualFunds_beta['fund_category'] == 'Large Blend']
+ytd_daily_blend = Large_Blend['fund_return_ytd']/252
+Sharpe_blend=ytd_daily_blend.mean()/ytd_daily_blend.std()
+print(Sharpe_blend)
+Large_Growth=MutualFunds_beta.loc[MutualFunds_beta['fund_category'] == 'Large Growth']           
+ytd_daily_growth= Large_Growth['fund_return_ytd']/252
+Sharpe_growth=ytd_daily_growth.mean()/ytd_daily_growth.std()
+print(Sharpe_growth)
