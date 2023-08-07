@@ -9,11 +9,7 @@ import openpyxl
 from pandas_datareader import data as pdr
 import statsmodels.api as sm
 from statsmodels import regression
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
 
-##### Import Excel File already cleared, the original file is from kaggle (https://www.kaggle.com/code/nvukobrat/mutual-funds-and-etfs-analysis-python/input?select=Mutual+Funds.csv)
-MutualFunds = pd.read_excel(r'C:\Users\oborg\OneDrive\Documents\MutualFundsCleaned.xlsx')
-MutualFunds.sample(10)    
-MutualFunds.describe(include='object')
-
-MutualFunds.drop_duplicates(inplace=True)
-MutualFunds.info()
+ETFs = pd.read_excel(r'C:\Users\oborg\OneDrive\Documents\Downloads\ETFs_cleaned.xlsx')
