@@ -13,3 +13,14 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 
 ETFs = pd.read_excel(r'C:\Users\oborg\OneDrive\Documents\Downloads\ETFs_cleaned.xlsx')
+ETFs.sample(10)
+ETFs.info()
+ETFs.describe(include='object')
+ETFs.describe()
+
+ETFs.drop_duplicates(inplace=True)
+ETFs.info()
+
+ETFs.fillna(method='bfill', inplace=True)
+ETFs.sample(10)
+ETFs.info()
