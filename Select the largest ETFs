@@ -1,0 +1,11 @@
+##### Select the biggest ETFs
+Top100_ETFs=ETFs.net_asset_value.sort_values(ascending=False)[:100]
+print(Top100_ETFs)
+biggest_Etfs=ETFs['net_asset_value'] >= 171500000000.00
+print(biggest_Etfs)
+
+ETFs=ETFs[biggest_Etfs]
+ETFs.sample(10)
+ETFs.info()
+
+ETFs.to_csv('Top100ETFs.csv')
