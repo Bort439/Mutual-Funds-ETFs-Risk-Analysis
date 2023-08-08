@@ -1,23 +1,16 @@
-##### Risk Analysis for each Fund: alpha, beta, r-squared, standard deviation, and the Sharpe ratio
-##### Calculate the beta
+##### Risk Analysis for each ETF
+alpha, beta, r-squared, standard deviation, and the Sharpe ratio
 
-#Importing category datas to calculate beta
-MutualFunds_category = pd.read_excel(r'C:\Users\oborg\OneDrive\Documents\MutualFundsCleaned.xlsx.xlsx')
-MutualFunds_category.sample(10)
-
-MutualFunds_beta = MutualFunds.merge(MutualFunds_category, on=['fund_symbol'])
-MutualFunds_beta.sample(10)
-MutualFunds_beta.info()
-MutualFunds_beta.category_return_ytd.plot()
-MutualFunds_beta.year_to_date_return.plot()
-
-plt.title('FundsVsCategory returns')
+ETFs.fund_return_ytd.plot()
+ETFs.category_return_ytd.plot()
 plt.legend()
-plt.show()
+plt.title('ETF vs Category YTD')
+##### Already from the graph we can assume that the beta will be distant from 1
 
-X = MutualFunds_beta.category_return_ytd
 
-Y = MutualFunds_beta.year_to_date_return
+X = ETFs.fund_return_ytd
+
+Y = ETFs.category_return_ytd
 
 def linear_reg(x,y):
     x = sm.add_constant(x)
@@ -28,23 +21,32 @@ alpha, beta = linear_reg(X,Y)
 print('alpha: ' + str(alpha))
 print('beta: ' + str(beta))
 
-    X2 = np.linspace(X.min(), X.max(), 100)
-    Y_hat = X2 * beta + alpha
-    plt.figure(figsize=(10,7))
-    plt.scatter(X, Y) # Plot the raw data
-    plt.xlabel("Category Return")
-    plt.ylabel("Mutual Funds Return")
+X2 = np.linspace(X.min(), X.max(), 100)
+Y_hat = X2 * beta + alpha
+plt.figure(figsize=(10,7))
+plt.scatter(X, Y) # Plot the raw data
+plt.xlabel("Category Return")
+plt.ylabel("Mutual Funds Return")
 
-    plt.plot(X2, Y_hat)
-    plt.show()
-    
-MutualFunds_beta.year_to_date_return.plot()
-MutualFunds_beta.year_to_date_return[8:].plot()
+plt.plot(X2, Y_hat)
+plt.show()
+
+avg_5y= ETFs.fund_return_5years.median()
+print(avg_5y)
+avg_10y= ETFs.fund_return_10years.median()
+print(avg_10y)
+ETFs.fund_return_5years.fillna(value=avg_5y, inplace = True)
+ETFs.fund_return_10years.fillna(value=avg_10y, inplace = True)
+
+ETFs.fund_return_1year.plot()
+ETFs.category_return_1year.plot()
 plt.legend()
+plt.title('ETF vs Category 1Y)
 
-X = MutualFunds_beta.category_return_ytd[8:]
 
-Y = MutualFunds_beta.year_to_date_return[8:]
+X = ETFs.fund_return_1year
+
+Y = ETFs.category_return_1year
 
 def linear_reg(x,y):
     x = sm.add_constant(x)
@@ -55,46 +57,46 @@ alpha, beta = linear_reg(X,Y)
 print('alpha: ' + str(alpha))
 print('beta: ' + str(beta))
 
-
-median_5y= MutualFunds_beta.fund_return_5years.median()
-print(median_5y)
-median_10y= MutualFunds_beta.fund_return_10years.median()
-print(median_10y)
-MutualFunds_beta.fund_return_5years.fillna(value=median_5y, inplace = True)
-MutualFunds_beta.fund_return_10years.fillna(value=median_10y, inplace = True)
-MutualFunds_beta.fund_return_2020.fillna(value=0, inplace=True) 
-MutualFunds_beta.isnull().sum()
-
-MutualFunds_beta.category_return_2020.plot()
-MutualFunds_beta.fund_return_2020.plot()
+ETFs.fund_return_5years.plot()
+ETFs.category_return_5years.plot()
 plt.legend()
-plt.show()
-A =  MutualFunds_beta.category_return_2020
-B =  MutualFunds_beta.fund_return_2020
-alpha, beta = linear_reg(A,B)
+plt.title('ETF vs Category 5Y')
+
+
+X = ETFs.fund_return_5years
+
+Y = ETFs.category_return_5years
+
+def linear_reg(x,y):
+    x = sm.add_constant(x)
+    model = regression.linear_model.OLS(y,x).fit()
+    return model.params[0], model.params[1]
+
+alpha, beta = linear_reg(X,Y)
 print('alpha: ' + str(alpha))
 print('beta: ' + str(beta))
 
-MutualFunds_beta.category_return_5years.plot()
-MutualFunds_beta.fund_return_5years.plot()
+ETFs.fund_return_10years.plot()
+ETFs.category_return_10years.plot()
 plt.legend()
-plt.show()
+plt.title('ETF vs Category 10Y')
 
-C=MutualFunds_beta.category_return_5years
-D=MutualFunds_beta.fund_return_5years
-alpha, beta = linear_reg(C,D)
+
+X = ETFs.fund_return_10years
+
+Y = ETFs.category_return_10years
+
+def linear_reg(x,y):
+    x = sm.add_constant(x)
+    model = regression.linear_model.OLS(y,x).fit()
+    return model.params[0], model.params[1]
+
+alpha, beta = linear_reg(X,Y)
 print('alpha: ' + str(alpha))
 print('beta: ' + str(beta))
 
+sns.regplot(y='category_return_1year', x='fund_return_1year', data = ETFs)
+sns.regplot(y='category_return_10years', x='fund_return_10years', data = ETFs)
+sns.regplot(y='category_return_5years', x='fund_return_1years', data = ETFs)
 
-MutualFunds_beta.category_return_10years.plot()
-MutualFunds_beta.fund_return_10years.plot()
-plt.legend()
-plt.show()
 
-E=MutualFunds_beta.category_return_10years
-
-F=MutualFunds_beta.fund_return_10years
-alpha, beta = linear_reg(E,F)
-print('alpha: ' + str(alpha))
-print('beta: ' + str(beta))
