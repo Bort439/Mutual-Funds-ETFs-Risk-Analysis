@@ -1,45 +1,41 @@
-# The Sharpe ratio is the average return earned in excess of the risk-free rate per unit of volatility 
-# I'll calculate the annualized Sharpe ratio because all data is annualized and I can compare different years to each other
+##### Sharpe Ratio 
+The Sharpe ratio is the average return earned in excess of the risk-free rate per unit of volatility
+I'll calculate the annualized Sharpe ratio because all data is annualized and I can compare different years to each other
 
-##### calculate the Sharpe Ratio for Mutual Funds
-ytd_daily_returns = MutualFunds_beta['fund_return_ytd']/252
-MutualFunds_beta['ytd_daily_returns']=ytd_daily_returns
-MutualFunds_beta['ytd_daily_returns']
+etf_daily_returns = ETFs['fund_return_ytd']/252
+ETFs['etf_daily_returns']=etf_daily_returns
+ETFs['etf_daily_returns']
+SR_ytd=ETFs['etf_daily_returns'].mean()/ETFs['etf_daily_returns'].std()
+print(SR_ytd)
+Annualized_SR=SR_ytd*(252**0.5) 
+print(Annualized_SR)
 
-Sharpe_Ratio_ytd=MutualFunds_beta['ytd_daily_returns'].mean()/MutualFunds_beta['ytd_daily_returns'].std()
-print(Sharpe_Ratio_ytd)
-# 0.7909863227419578
+category_daily_return=ETFs['category_return_ytd']/252
+ETFs['category_daily_return'] = category_daily_return
+ETFs['category_daily_return'] 
+SR_category = ETFs['category_daily_return'].mean()/ETFs['category_daily_return'].std()
+print(SR_category)
 
-A_Sharpe_Ratio=Sharpe_Ratio_ytd*(252**0.5) 
-print(A_Sharpe_Ratio)
+etf_daily_5y=ETFs['fund_return_5years']/(252*5)
+ETFs['etf_daily_5y']=etf_daily_5y
+ETFs['etf_daily_5y']
+SR_5y=ETFs['etf_daily_5y'].mean()/ETFs['etf_daily_5y'].std()
+print(SR_5y)
 
+category_daily_5y=ETFs['category_return_5years']/(252*5)
+ETFs['category_daily_5y']=category_daily_5y
+ETFs['category_daily_5y']
+SR_Cat5y=ETFs['category_daily_5y'].mean()/ETFs['category_daily_5y'].std()
+print(SR_Cat5y)
 
-##### calculate the Sharpe Ratio for each Category
-Sharpe_Ratio_category = MutualFunds_beta['category_daily_return'].mean()/MutualFunds_beta['category_daily_return'].std()
-print(Sharpe_Ratio_category)
-# 1.983909070771074
+etf_daily_10y=ETFs['fund_return_10years']/(252*10)
+ETFs['etf_daily_10y']=etf_daily_10y
+ETFs['etf_daily_10y']
+SR_10y=ETFs['etf_daily_10y'].mean()/ETFs['etf_daily_10y'].std()
+print(SR_10y)
 
-#### Categories splitting
-display(MutualFunds_beta.groupby('fund_category').count()['fund_symbol'])
-
-MF_Foreign_Large_Blend = MutualFunds_beta.loc[MutualFunds_beta['fund_category'] == 'Foreign Large Blend']
-MF_Foreign_Large_Blend
-
-ydt_daily_earnings=MF_Foreign_Large_Blend['fund_return_ytd']/252
-Sharpe_ytd=ydt_daily_earnings.mean()/ydt_daily_earnings.std()
-print(Sharpe_ytd)
-
-Foreign_Large_Growth= MutualFunds_beta.loc[MutualFunds_beta['fund_category'] == 'Foreign Large Growth']
-Foreign_Large_Growth
-
-ytd_daily_foreign = Foreign_Large_Growth['fund_return_ytd']/252
-Sharpe_foreign=ytd_daily_foreign.mean()/ytd_daily_foreign.std()
-print(Sharpe_foreign)
-Large_Blend=MutualFunds_beta.loc[MutualFunds_beta['fund_category'] == 'Large Blend']
-ytd_daily_blend = Large_Blend['fund_return_ytd']/252
-Sharpe_blend=ytd_daily_blend.mean()/ytd_daily_blend.std()
-print(Sharpe_blend)
-Large_Growth=MutualFunds_beta.loc[MutualFunds_beta['fund_category'] == 'Large Growth']           
-ytd_daily_growth= Large_Growth['fund_return_ytd']/252
-Sharpe_growth=ytd_daily_growth.mean()/ytd_daily_growth.std()
-print(Sharpe_growth)
+category_daily_10y=ETFs['category_return_10years']/(252*10)
+ETFs['category_daily_10y']=category_daily_10y
+ETFs['category_daily_10y']
+SR_Cat10y=ETFs['category_daily_10y'].mean()/ETFs['category_daily_10y'].std()
+print(SR_Cat10y)
